@@ -1,0 +1,497 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>muse_tools.diagnostics &mdash; Project name not set  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Project name not set
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">muse_tools</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Project name not set</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">muse_tools.diagnostics</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for muse_tools.diagnostics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Diagnostic plots: beta functions, envelopes, optics sheet.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rectangle</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.beamline</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_element_positions</span><span class="p">,</span> <span class="n">element_color</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.optics</span><span class="w"> </span><span class="kn">import</span> <span class="n">propagate_sigma</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.optics</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_R_matrix_dict</span>
+
+
+<div class="viewcode-block" id="plot_beta_and_envelope">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.diagnostics.plot_beta_and_envelope">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_beta_and_envelope</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">tw</span><span class="p">,</span> <span class="n">emit_x</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">emit_y</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot beta functions and geometric envelope.&quot;&quot;&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">tw</span><span class="o">.</span><span class="n">s</span>
+    <span class="n">betx</span> <span class="o">=</span> <span class="n">tw</span><span class="o">.</span><span class="n">betx</span>
+    <span class="n">bety</span> <span class="o">=</span> <span class="n">tw</span><span class="o">.</span><span class="n">bety</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">tw</span><span class="o">.</span><span class="n">dx</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tw</span><span class="p">,</span> <span class="s2">&quot;dx&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="n">sig_x</span><span class="p">,</span> <span class="n">sig_y</span> <span class="o">=</span> <span class="n">propagate_sigma</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">tw</span><span class="p">)</span>
+
+    <span class="n">positions</span> <span class="o">=</span> <span class="n">get_element_positions</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_beta</span><span class="p">,</span> <span class="n">ax_env</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">betx</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;βx&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkorange&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">bety</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;βy&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;β [m]&quot;</span><span class="p">)</span>
+
+    <span class="n">ax2</span> <span class="o">=</span> <span class="n">ax_beta</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Dx&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Dx [m]&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">)</span>
+
+    <span class="n">ymax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">betx</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">bety</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">etype</span><span class="p">,</span> <span class="n">spos</span><span class="p">,</span> <span class="n">L</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">etype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;Quadrupole&quot;</span><span class="p">,</span> <span class="s2">&quot;Multipole&quot;</span><span class="p">,</span> <span class="s2">&quot;Bend&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">L</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">element_color</span><span class="p">(</span><span class="n">etype</span><span class="p">)</span>
+            <span class="n">ax_beta</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">((</span><span class="n">spos</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">L</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+                                        <span class="n">transform</span><span class="o">=</span><span class="n">ax_beta</span><span class="o">.</span><span class="n">get_xaxis_transform</span><span class="p">(),</span>
+                                        <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
+            <span class="n">ax_beta</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">spos</span> <span class="o">+</span> <span class="n">L</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.97</span><span class="o">*</span><span class="n">ymax</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+                         <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
+
+    <span class="n">ax_env</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">sig_y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;σy&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax_env</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">-</span><span class="n">sig_x</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;-σx&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkorange&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax_env</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax_env</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;s [m]&quot;</span><span class="p">)</span>
+    <span class="n">ax_env</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Beam size σ [m]&quot;</span><span class="p">)</span>
+
+    <span class="n">ax3</span> <span class="o">=</span> <span class="n">ax_env</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Dx&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Dx [m]&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+
+<div class="viewcode-block" id="plot_overlaid_envelopes">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.diagnostics.plot_overlaid_envelopes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_overlaid_envelopes</span><span class="p">(</span><span class="n">configs</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">apertures</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot overlaid beam envelopes for multiple optics configurations.</span>
+
+<span class="sd">    configs: list of dicts with keys:</span>
+<span class="sd">        - line</span>
+<span class="sd">        - tw</span>
+<span class="sd">        - sig_x</span>
+<span class="sd">        - sig_y</span>
+<span class="sd">        - label</span>
+<span class="sd">        - dp_frac</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rectangle</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 1. Reference s-grid: Twiss element boundaries</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">tw0</span> <span class="o">=</span> <span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;tw&quot;</span><span class="p">]</span>
+    <span class="n">s_ref</span> <span class="o">=</span> <span class="n">tw0</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">betx</span> <span class="o">=</span> <span class="n">tw0</span><span class="o">.</span><span class="n">betx</span>
+    <span class="n">bety</span> <span class="o">=</span> <span class="n">tw0</span><span class="o">.</span><span class="n">bety</span>
+    <span class="n">dx</span>   <span class="o">=</span> <span class="n">tw0</span><span class="o">.</span><span class="n">dx</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tw0</span><span class="p">,</span> <span class="s2">&quot;dx&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s_ref</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 2. Interpolate envelopes for all configs onto Twiss s-grid</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="k">for</span> <span class="n">cfg</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;line&quot;</span><span class="p">]</span>
+        <span class="n">s_sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">get_length</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;sig_x&quot;</span><span class="p">]))</span>
+        <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;sig_x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">s_ref</span><span class="p">,</span> <span class="n">s_sigma</span><span class="p">,</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;sig_x&quot;</span><span class="p">])</span>
+        <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;sig_y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">s_ref</span><span class="p">,</span> <span class="n">s_sigma</span><span class="p">,</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;sig_y&quot;</span><span class="p">])</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 3. Use line from first config for magnet shading</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;line&quot;</span><span class="p">]</span>
+    <span class="n">positions</span> <span class="o">=</span> <span class="n">get_element_positions</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 4. Create figure</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_beta</span><span class="p">,</span> <span class="n">ax_env</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+        <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;height_ratios&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]}</span>
+    <span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 5. TOP PANEL: βx, βy, Dx with magnet shading</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s_ref</span><span class="p">,</span> <span class="n">betx</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;βx&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkorange&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s_ref</span><span class="p">,</span> <span class="n">bety</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;βy&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;β [m]&quot;</span><span class="p">)</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">ax2</span> <span class="o">=</span> <span class="n">ax_beta</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s_ref</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Dx&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Dx [m]&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">)</span>
+
+    <span class="n">ymax_beta</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">betx</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">bety</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">etype</span><span class="p">,</span> <span class="n">spos</span><span class="p">,</span> <span class="n">L</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">etype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;Quadrupole&quot;</span><span class="p">,</span> <span class="s2">&quot;Multipole&quot;</span><span class="p">,</span> <span class="s2">&quot;Bend&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">L</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">element_color</span><span class="p">(</span><span class="n">etype</span><span class="p">)</span>
+            <span class="n">ax_beta</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">spos</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">L</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">transform</span><span class="o">=</span><span class="n">ax_beta</span><span class="o">.</span><span class="n">get_xaxis_transform</span><span class="p">(),</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.20</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span>
+            <span class="p">))</span>
+            <span class="n">ax_beta</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                <span class="n">spos</span> <span class="o">+</span> <span class="n">L</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.97</span><span class="o">*</span><span class="n">ymax_beta</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span>
+            <span class="p">)</span>
+
+    <span class="n">l1</span><span class="p">,</span> <span class="n">lab1</span> <span class="o">=</span> <span class="n">ax_beta</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+    <span class="n">l2</span><span class="p">,</span> <span class="n">lab2</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">l1</span> <span class="o">+</span> <span class="n">l2</span><span class="p">,</span> <span class="n">lab1</span> <span class="o">+</span> <span class="n">lab2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 6. BOTTOM PANEL: Envelopes + σx_total + magnet shading + apertures</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">ymax_env</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">cfg</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+        <span class="n">ymax_env</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ymax_env</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;sig_y&quot;</span><span class="p">]))</span>
+
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">etype</span><span class="p">,</span> <span class="n">spos</span><span class="p">,</span> <span class="n">L</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">etype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;Quadrupole&quot;</span><span class="p">,</span> <span class="s2">&quot;Multipole&quot;</span><span class="p">,</span> <span class="s2">&quot;Bend&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">L</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">element_color</span><span class="p">(</span><span class="n">etype</span><span class="p">)</span>
+            <span class="n">ax_env</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">spos</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">L</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">transform</span><span class="o">=</span><span class="n">ax_env</span><span class="o">.</span><span class="n">get_xaxis_transform</span><span class="p">(),</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.20</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span>
+            <span class="p">))</span>
+            <span class="n">ax_env</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                <span class="n">spos</span> <span class="o">+</span> <span class="n">L</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.97</span><span class="o">*</span><span class="n">ymax_env</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span>
+            <span class="p">)</span>
+
+    <span class="n">line_styles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="s2">&quot;dashed&quot;</span><span class="p">,</span> <span class="s2">&quot;dotted&quot;</span><span class="p">,</span> <span class="s2">&quot;dashdot&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cfg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">configs</span><span class="p">):</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">line_styles</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">line_styles</span><span class="p">)]</span>
+        <span class="n">dp</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dp_frac&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="c1"># geometric σy (always)</span>
+        <span class="n">ax_env</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">s_ref</span><span class="p">,</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;sig_y&quot;</span><span class="p">],</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;σy geom (</span><span class="si">{</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># σx total if dp != 0</span>
+        <span class="k">if</span> <span class="n">dp</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">sig_x_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;sig_x&quot;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">dx</span> <span class="o">*</span> <span class="n">dp</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">ax_env</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">s_ref</span><span class="p">,</span> <span class="o">-</span><span class="n">sig_x_tot</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;-σx total (</span><span class="si">{</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span>
+                <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkorange&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax_env</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">s_ref</span><span class="p">,</span> <span class="o">-</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;sig_x&quot;</span><span class="p">],</span>
+                <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;-σx geom (</span><span class="si">{</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span>
+                <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkorange&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 7. Aperture overlays</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="k">if</span> <span class="n">apertures</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ap</span> <span class="ow">in</span> <span class="n">apertures</span><span class="p">:</span>
+            <span class="n">s0</span> <span class="o">=</span> <span class="n">ap</span><span class="p">[</span><span class="s2">&quot;s&quot;</span><span class="p">]</span>
+            <span class="n">ax_env</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s2">&quot;half_ap_x&quot;</span> <span class="ow">in</span> <span class="n">ap</span><span class="p">:</span>
+                <span class="n">ax_env</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">ap</span><span class="p">[</span><span class="s2">&quot;half_ap_x&quot;</span><span class="p">],</span> <span class="n">s0</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">s0</span><span class="o">+</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">ax_env</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="o">-</span><span class="n">ap</span><span class="p">[</span><span class="s2">&quot;half_ap_x&quot;</span><span class="p">],</span> <span class="n">s0</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">s0</span><span class="o">+</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s2">&quot;half_ap_y&quot;</span> <span class="ow">in</span> <span class="n">ap</span><span class="p">:</span>
+                <span class="n">ax_env</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">ap</span><span class="p">[</span><span class="s2">&quot;half_ap_y&quot;</span><span class="p">],</span> <span class="n">s0</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">s0</span><span class="o">+</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">ax_env</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="o">-</span><span class="n">ap</span><span class="p">[</span><span class="s2">&quot;half_ap_y&quot;</span><span class="p">],</span> <span class="n">s0</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">s0</span><span class="o">+</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">ax_env</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="mf">1.05</span><span class="o">*</span><span class="n">ymax_env</span><span class="p">,</span> <span class="n">ap</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 8. Dx twin axis + legends</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">ax_env</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;s [m]&quot;</span><span class="p">)</span>
+    <span class="n">ax_env</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Beam size σ [m]&quot;</span><span class="p">)</span>
+    <span class="n">ax_env</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">ax3</span> <span class="o">=</span> <span class="n">ax_env</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s_ref</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Dx&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Dx [m]&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">)</span>
+
+    <span class="n">l3</span><span class="p">,</span> <span class="n">lab3</span> <span class="o">=</span> <span class="n">ax_env</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+    <span class="n">l4</span><span class="p">,</span> <span class="n">lab4</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+    <span class="n">ax_env</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">l3</span> <span class="o">+</span> <span class="n">l4</span><span class="p">,</span> <span class="n">lab3</span> <span class="o">+</span> <span class="n">lab4</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower left&quot;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+
+<div class="viewcode-block" id="plot_optics_sheet">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.diagnostics.plot_optics_sheet">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_optics_sheet</span><span class="p">(</span><span class="n">configs</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TRANSPORT-style optics sheet with 4 panels:</span>
+<span class="sd">      1. Beta functions (βx, βy) + Dx</span>
+<span class="sd">      2. Dispersion-inflated envelopes σx_total and geometric σy</span>
+<span class="sd">      3. R12, R34 accumulated transport matrix elements</span>
+<span class="sd">      4. Kx, Ky focusing strengths (piecewise constant)</span>
+
+<span class="sd">    Uses the same input structure as plot_overlaid_envelopes(configs).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rectangle</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># Extract nominal optics from configs[0]</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">cfg0</span> <span class="o">=</span> <span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">cfg0</span><span class="p">[</span><span class="s2">&quot;line&quot;</span><span class="p">]</span>
+    <span class="n">tw</span>   <span class="o">=</span> <span class="n">cfg0</span><span class="p">[</span><span class="s2">&quot;tw&quot;</span><span class="p">]</span>
+
+    <span class="n">s</span>    <span class="o">=</span> <span class="n">tw</span><span class="o">.</span><span class="n">s</span>
+    <span class="n">betx</span> <span class="o">=</span> <span class="n">tw</span><span class="o">.</span><span class="n">betx</span>
+    <span class="n">bety</span> <span class="o">=</span> <span class="n">tw</span><span class="o">.</span><span class="n">bety</span>
+    <span class="n">dx</span>   <span class="o">=</span> <span class="n">tw</span><span class="o">.</span><span class="n">dx</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tw</span><span class="p">,</span> <span class="s2">&quot;dx&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># Geometry</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">names</span>   <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">element_names</span>
+    <span class="n">s_start</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_s_elements</span><span class="p">()</span>
+    <span class="n">lengths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="s2">&quot;length&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">elements</span><span class="p">]</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># Compute R-matrix accumulation</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">compute_R_matrix_dict</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">R12</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="s2">&quot;R12&quot;</span><span class="p">]</span>
+    <span class="n">R34</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="s2">&quot;R34&quot;</span><span class="p">]</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># Compute Kx, Ky piecewise-constant focusing strengths</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">Kx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">Ky</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">elements</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="s2">&quot;k1&quot;</span><span class="p">):</span>
+            <span class="n">Kx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span>  <span class="n">elem</span><span class="o">.</span><span class="n">k1</span>
+            <span class="n">Ky</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">elem</span><span class="o">.</span><span class="n">k1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Kx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">Ky</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># Figure with 4 stacked panels</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+        <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;height_ratios&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]}</span>
+    <span class="p">)</span>
+
+    <span class="n">ax_beta</span><span class="p">,</span> <span class="n">ax_env</span><span class="p">,</span> <span class="n">ax_R</span><span class="p">,</span> <span class="n">ax_K</span> <span class="o">=</span> <span class="n">axs</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># Panel 1: Beta functions + Dx</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">betx</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;βx&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkorange&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">bety</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;βy&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;β [m]&quot;</span><span class="p">)</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">ax2</span> <span class="o">=</span> <span class="n">ax_beta</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Dx&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Dx [m]&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="s2">&quot;steelblue&quot;</span><span class="p">)</span>
+
+    <span class="n">ymax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">betx</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">bety</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+
+    <span class="c1"># Magnet shading + names</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">s_start</span><span class="p">,</span> <span class="n">lengths</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">elements</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">L</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">etype</span> <span class="o">=</span> <span class="n">elem</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">if</span> <span class="s2">&quot;Quadrupole&quot;</span> <span class="ow">in</span> <span class="n">etype</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span>
+        <span class="k">elif</span> <span class="s2">&quot;Bend&quot;</span> <span class="ow">in</span> <span class="n">etype</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span>
+        <span class="k">elif</span> <span class="s2">&quot;Multipole&quot;</span> <span class="ow">in</span> <span class="n">etype</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;purple&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">ax_beta</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">L</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">transform</span><span class="o">=</span><span class="n">ax_beta</span><span class="o">.</span><span class="n">get_xaxis_transform</span><span class="p">(),</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.20</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">))</span>
+
+        <span class="n">ax_beta</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+            <span class="n">s0</span> <span class="o">+</span> <span class="n">L</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.97</span><span class="o">*</span><span class="n">ymax</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+            <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+            <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># Panel 2: σx_total and σy</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="k">for</span> <span class="n">cfg</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+        <span class="n">dp</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;dp_frac&quot;</span><span class="p">]</span>
+        <span class="n">sig_x</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;sig_x&quot;</span><span class="p">]</span>
+        <span class="n">sig_y</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;sig_y&quot;</span><span class="p">]</span>
+
+        <span class="n">sig_x_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sig_x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">dx</span> <span class="o">*</span> <span class="n">dp</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">ax_env</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">sig_x_total</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;σx_total (</span><span class="si">{</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkorange&quot;</span><span class="p">)</span>
+        <span class="n">ax_env</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">sig_y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;σy (</span><span class="si">{</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+
+    <span class="n">ax_env</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;σ [m]&quot;</span><span class="p">)</span>
+    <span class="n">ax_env</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># Panel 3: R12, R34</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">ax_R</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">R12</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;R12&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;purple&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax_R</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">R34</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;R34&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;brown&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax_R</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;R-matrix&quot;</span><span class="p">)</span>
+    <span class="n">ax_R</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># Panel 4: Kx, Ky</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">ax_K</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">Kx</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Kx&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax_K</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">Ky</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Ky&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+    <span class="n">ax_K</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;K [1/m]&quot;</span><span class="p">)</span>
+    <span class="n">ax_K</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;s [m]&quot;</span><span class="p">)</span>
+    <span class="n">ax_K</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># Legends</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">ax_beta</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+    <span class="n">ax_env</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+    <span class="n">ax_R</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+    <span class="n">ax_K</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

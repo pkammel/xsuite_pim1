@@ -1,0 +1,469 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>muse_tools package &mdash; Project name not set  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="muse_tools" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Project name not set
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">muse_tools</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">muse_tools package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-muse_tools.beamline">muse_tools.beamline module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.beamline.build_muse_line"><code class="docutils literal notranslate"><span class="pre">build_muse_line()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.beamline.dipole_from_transport"><code class="docutils literal notranslate"><span class="pre">dipole_from_transport()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.beamline.drift"><code class="docutils literal notranslate"><span class="pre">drift()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.beamline.element_color"><code class="docutils literal notranslate"><span class="pre">element_color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.beamline.get_element_positions"><code class="docutils literal notranslate"><span class="pre">get_element_positions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.beamline.psi_quad_from_transport"><code class="docutils literal notranslate"><span class="pre">psi_quad_from_transport()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.beamline.quad_from_transport"><code class="docutils literal notranslate"><span class="pre">quad_from_transport()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-muse_tools.diagnostics">muse_tools.diagnostics module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.diagnostics.plot_beta_and_envelope"><code class="docutils literal notranslate"><span class="pre">plot_beta_and_envelope()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.diagnostics.plot_optics_sheet"><code class="docutils literal notranslate"><span class="pre">plot_optics_sheet()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.diagnostics.plot_overlaid_envelopes"><code class="docutils literal notranslate"><span class="pre">plot_overlaid_envelopes()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-muse_tools.histograms">muse_tools.histograms module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.histograms.plot_one_histogram_for_all_keys"><code class="docutils literal notranslate"><span class="pre">plot_one_histogram_for_all_keys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.histograms.print_track_stats"><code class="docutils literal notranslate"><span class="pre">print_track_stats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.histograms.run_final_verification"><code class="docutils literal notranslate"><span class="pre">run_final_verification()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.histograms.save_all_histograms_to_pdf"><code class="docutils literal notranslate"><span class="pre">save_all_histograms_to_pdf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.histograms.store_phase_space"><code class="docutils literal notranslate"><span class="pre">store_phase_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.histograms.verify_final_solution_optics"><code class="docutils literal notranslate"><span class="pre">verify_final_solution_optics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-muse_tools.matching">muse_tools.matching module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.matching.coordinate_descent_triplet_matrix"><code class="docutils literal notranslate"><span class="pre">coordinate_descent_triplet_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.matching.measure_sigmas_from_matrices"><code class="docutils literal notranslate"><span class="pre">measure_sigmas_from_matrices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.matching.scan_single_quad_matrix"><code class="docutils literal notranslate"><span class="pre">scan_single_quad_matrix()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-muse_tools.optics">muse_tools.optics module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.optics.compute_R_matrix_dict"><code class="docutils literal notranslate"><span class="pre">compute_R_matrix_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.optics.compute_twiss"><code class="docutils literal notranslate"><span class="pre">compute_twiss()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.optics.element_matrix"><code class="docutils literal notranslate"><span class="pre">element_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.optics.element_matrix_for_line"><code class="docutils literal notranslate"><span class="pre">element_matrix_for_line()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.optics.get_cumulative_2x2_matrices"><code class="docutils literal notranslate"><span class="pre">get_cumulative_2x2_matrices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.optics.make_beam"><code class="docutils literal notranslate"><span class="pre">make_beam()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.optics.print_beam_stats"><code class="docutils literal notranslate"><span class="pre">print_beam_stats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.optics.print_flat_beam_stats"><code class="docutils literal notranslate"><span class="pre">print_flat_beam_stats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.optics.propagate_sigma"><code class="docutils literal notranslate"><span class="pre">propagate_sigma()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.optics.sigma0_from_beam_xy"><code class="docutils literal notranslate"><span class="pre">sigma0_from_beam_xy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-muse_tools.particles">muse_tools.particles module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.particles.get_particle_mass"><code class="docutils literal notranslate"><span class="pre">get_particle_mass()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.particles.get_particle_pdg"><code class="docutils literal notranslate"><span class="pre">get_particle_pdg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.particles.make_reference_particle"><code class="docutils literal notranslate"><span class="pre">make_reference_particle()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-muse_tools.trajectories">muse_tools.trajectories module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.trajectories.generate_particles_from_cfg"><code class="docutils literal notranslate"><span class="pre">generate_particles_from_cfg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.trajectories.get_element_positions"><code class="docutils literal notranslate"><span class="pre">get_element_positions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.trajectories.plot_xy_trajectories"><code class="docutils literal notranslate"><span class="pre">plot_xy_trajectories()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.trajectories.sigma0_from_beam_xy"><code class="docutils literal notranslate"><span class="pre">sigma0_from_beam_xy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.trajectories.track_xy_trajectories"><code class="docutils literal notranslate"><span class="pre">track_xy_trajectories()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#muse_tools.trajectories.track_xy_trajectories1"><code class="docutils literal notranslate"><span class="pre">track_xy_trajectories1()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-muse_tools">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Project name not set</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">muse_tools</a></li>
+      <li class="breadcrumb-item active">muse_tools package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/muse_tools.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="muse-tools-package">
+<h1>muse_tools package<a class="headerlink" href="#muse-tools-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-muse_tools.beamline">
+<span id="muse-tools-beamline-module"></span><h2>muse_tools.beamline module<a class="headerlink" href="#module-muse_tools.beamline" title="Link to this heading"></a></h2>
+<p>Beamline construction utilities for the MUSE transport line.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.beamline.build_muse_line">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.beamline.</span></span><span class="sig-name descname"><span class="pre">build_muse_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_fringe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pi+'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lim_fs11</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[-0.01098,</span> <span class="pre">0.01098],</span> <span class="pre">[-0.054,</span> <span class="pre">0.054]]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lim_ifp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[-0.105,</span> <span class="pre">0.105],</span> <span class="pre">[-0.105,</span> <span class="pre">0.105]]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qfactors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/beamline.html#build_muse_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.beamline.build_muse_line" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.beamline.dipole_from_transport">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.beamline.</span></span><span class="sig-name descname"><span class="pre">dipole_from_transport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B0_kG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_entry_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_exit_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/beamline.html#dipole_from_transport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.beamline.dipole_from_transport" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.beamline.drift">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.beamline.</span></span><span class="sig-name descname"><span class="pre">drift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/beamline.html#drift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.beamline.drift" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.beamline.element_color">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.beamline.</span></span><span class="sig-name descname"><span class="pre">element_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">etype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/beamline.html#element_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.beamline.element_color" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.beamline.get_element_positions">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.beamline.</span></span><span class="sig-name descname"><span class="pre">get_element_positions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/beamline.html#get_element_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.beamline.get_element_positions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.beamline.psi_quad_from_transport">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.beamline.</span></span><span class="sig-name descname"><span class="pre">psi_quad_from_transport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B_kG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fringe_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'QXA'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/beamline.html#psi_quad_from_transport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.beamline.psi_quad_from_transport" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.beamline.quad_from_transport">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.beamline.</span></span><span class="sig-name descname"><span class="pre">quad_from_transport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B_kG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/beamline.html#quad_from_transport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.beamline.quad_from_transport" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-muse_tools.diagnostics">
+<span id="muse-tools-diagnostics-module"></span><h2>muse_tools.diagnostics module<a class="headerlink" href="#module-muse_tools.diagnostics" title="Link to this heading"></a></h2>
+<p>Diagnostic plots: beta functions, envelopes, optics sheet.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.diagnostics.plot_beta_and_envelope">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.diagnostics.</span></span><span class="sig-name descname"><span class="pre">plot_beta_and_envelope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emit_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emit_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">10)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/diagnostics.html#plot_beta_and_envelope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.diagnostics.plot_beta_and_envelope" title="Link to this definition"></a></dt>
+<dd><p>Plot beta functions and geometric envelope.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.diagnostics.plot_optics_sheet">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.diagnostics.</span></span><span class="sig-name descname"><span class="pre">plot_optics_sheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(14,</span> <span class="pre">12)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/diagnostics.html#plot_optics_sheet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.diagnostics.plot_optics_sheet" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>TRANSPORT-style optics sheet with 4 panels:</dt><dd><ol class="arabic simple">
+<li><p>Beta functions (βx, βy) + Dx</p></li>
+<li><p>Dispersion-inflated envelopes σx_total and geometric σy</p></li>
+<li><p>R12, R34 accumulated transport matrix elements</p></li>
+<li><p>Kx, Ky focusing strengths (piecewise constant)</p></li>
+</ol>
+</dd>
+</dl>
+<p>Uses the same input structure as plot_overlaid_envelopes(configs).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.diagnostics.plot_overlaid_envelopes">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.diagnostics.</span></span><span class="sig-name descname"><span class="pre">plot_overlaid_envelopes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apertures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">10)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/diagnostics.html#plot_overlaid_envelopes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.diagnostics.plot_overlaid_envelopes" title="Link to this definition"></a></dt>
+<dd><p>Plot overlaid beam envelopes for multiple optics configurations.</p>
+<dl class="simple">
+<dt>configs: list of dicts with keys:</dt><dd><ul class="simple">
+<li><p>line</p></li>
+<li><p>tw</p></li>
+<li><p>sig_x</p></li>
+<li><p>sig_y</p></li>
+<li><p>label</p></li>
+<li><p>dp_frac</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-muse_tools.histograms">
+<span id="muse-tools-histograms-module"></span><h2>muse_tools.histograms module<a class="headerlink" href="#module-muse_tools.histograms" title="Link to this heading"></a></h2>
+<p>Snapshot and histogram plotting utilities for phase-space snapshots.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.histograms.plot_one_histogram_for_all_keys">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.histograms.</span></span><span class="sig-name descname"><span class="pre">plot_one_histogram_for_all_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snapshots</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">histo_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extractor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(12,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alive_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labelrotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/histograms.html#plot_one_histogram_for_all_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.histograms.plot_one_histogram_for_all_keys" title="Link to this definition"></a></dt>
+<dd><p>Draw one histogram type across all keys in a 3×3 grid.</p>
+<dl class="simple">
+<dt>extractor(x, y, xp, yp, delta) must return:</dt><dd><ul class="simple">
+<li><p>(X,) for 1D histograms</p></li>
+<li><p>(X, Y) for 2D histograms</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.histograms.print_track_stats">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.histograms.</span></span><span class="sig-name descname"><span class="pre">print_track_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">particles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/histograms.html#print_track_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.histograms.print_track_stats" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.histograms.run_final_verification">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.histograms.</span></span><span class="sig-name descname"><span class="pre">run_final_verification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line_full</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k1_final</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snapshot_keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">histograms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdf_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pkl_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudinal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.03</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/histograms.html#run_final_verification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.histograms.run_final_verification" title="Link to this definition"></a></dt>
+<dd><p>Run the final verification for the beamline simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>line_full</strong> (<em>xtrack.Line</em>) – The full Xsuite line object.</p></li>
+<li><p><strong>k1_final</strong> (<em>list</em>) – Final quadrupole strengths.</p></li>
+<li><p><strong>...</strong> (<em>...</em><em> (</em><em>add other params if you like</em><em>)</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.histograms.save_all_histograms_to_pdf">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.histograms.</span></span><span class="sig-name descname"><span class="pre">save_all_histograms_to_pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snapshots</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">histograms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdf_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'phase_space_histograms.pdf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pkl_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'phase_space_histograms.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">120</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(12,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alive_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/histograms.html#save_all_histograms_to_pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.histograms.save_all_histograms_to_pdf" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.histograms.store_phase_space">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.histograms.</span></span><span class="sig-name descname"><span class="pre">store_phase_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_storage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_full</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/histograms.html#store_phase_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.histograms.store_phase_space" title="Link to this definition"></a></dt>
+<dd><p>Store phase space at selected element entrances or user-defined s positions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.histograms.verify_final_solution_optics">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.histograms.</span></span><span class="sig-name descname"><span class="pre">verify_final_solution_optics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line_optics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k1_final</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snapshot_keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_y0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/histograms.html#verify_final_solution_optics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.histograms.verify_final_solution_optics" title="Link to this definition"></a></dt>
+<dd><p>Optics-only verification: apply k1 values to line_optics and
+compute sigma_x, sigma_y at each snapshot location using
+matrix-based propagation. No tracking, no histograms.</p>
+</dd></dl>
+
+</section>
+<section id="module-muse_tools.matching">
+<span id="muse-tools-matching-module"></span><h2>muse_tools.matching module<a class="headerlink" href="#module-muse_tools.matching" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.matching.coordinate_descent_triplet_matrix">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.matching.</span></span><span class="sig-name descname"><span class="pre">coordinate_descent_triplet_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line_optics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quad_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k1_init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'target'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shrink_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/matching.html#coordinate_descent_triplet_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.matching.coordinate_descent_triplet_matrix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.matching.measure_sigmas_from_matrices">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.matching.</span></span><span class="sig-name descname"><span class="pre">measure_sigmas_from_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/matching.html#measure_sigmas_from_matrices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.matching.measure_sigmas_from_matrices" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.matching.scan_single_quad_matrix">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.matching.</span></span><span class="sig-name descname"><span class="pre">scan_single_quad_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quad_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k1_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_y0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/matching.html#scan_single_quad_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.matching.scan_single_quad_matrix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-muse_tools.optics">
+<span id="muse-tools-optics-module"></span><h2>muse_tools.optics module<a class="headerlink" href="#module-muse_tools.optics" title="Link to this heading"></a></h2>
+<p>Optics utilities: Twiss, sigma propagation, R-matrices.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.optics.compute_R_matrix_dict">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.optics.</span></span><span class="sig-name descname"><span class="pre">compute_R_matrix_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/optics.html#compute_R_matrix_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.optics.compute_R_matrix_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.optics.compute_twiss">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.optics.</span></span><span class="sig-name descname"><span class="pre">compute_twiss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/optics.html#compute_twiss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.optics.compute_twiss" title="Link to this definition"></a></dt>
+<dd><p>Compute Twiss and smooth interpolation.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.optics.element_matrix">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.optics.</span></span><span class="sig-name descname"><span class="pre">element_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/optics.html#element_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.optics.element_matrix" title="Link to this definition"></a></dt>
+<dd><p>6x6 finite-difference matrix for a single element.
+Used by get_cumulative_2x2_matrices() and propagate_sigma().</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.optics.element_matrix_for_line">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.optics.</span></span><span class="sig-name descname"><span class="pre">element_matrix_for_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/optics.html#element_matrix_for_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.optics.element_matrix_for_line" title="Link to this definition"></a></dt>
+<dd><p>Convenience wrapper: get 6x6 matrix for element <cite>idx</cite> in <cite>line</cite>.
+Does NOT change the original element_matrix signature.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.optics.get_cumulative_2x2_matrices">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.optics.</span></span><span class="sig-name descname"><span class="pre">get_cumulative_2x2_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/optics.html#get_cumulative_2x2_matrices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.optics.get_cumulative_2x2_matrices" title="Link to this definition"></a></dt>
+<dd><p>Return cumulative 2×2 matrices Mx(s), My(s).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.optics.make_beam">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.optics.</span></span><span class="sig-name descname"><span class="pre">make_beam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Sigma_y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gaussian'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudinal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gaussian'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.003</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12345</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pi+'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/optics.html#make_beam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.optics.make_beam" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.optics.print_beam_stats">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.optics.</span></span><span class="sig-name descname"><span class="pre">print_beam_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">particles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/optics.html#print_beam_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.optics.print_beam_stats" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.optics.print_flat_beam_stats">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.optics.</span></span><span class="sig-name descname"><span class="pre">print_flat_beam_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">particles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/optics.html#print_flat_beam_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.optics.print_flat_beam_stats" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.optics.propagate_sigma">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.optics.</span></span><span class="sig-name descname"><span class="pre">propagate_sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emit_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emit_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/optics.html#propagate_sigma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.optics.propagate_sigma" title="Link to this definition"></a></dt>
+<dd><p>Propagate geometric sigma using cumulative 2×2 matrices.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.optics.sigma0_from_beam_xy">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.optics.</span></span><span class="sig-name descname"><span class="pre">sigma0_from_beam_xy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/optics.html#sigma0_from_beam_xy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.optics.sigma0_from_beam_xy" title="Link to this definition"></a></dt>
+<dd><p>Return initial sigma matrices and phase-space half-widths
+based on the BEAM card definition.</p>
+</dd></dl>
+
+</section>
+<section id="module-muse_tools.particles">
+<span id="muse-tools-particles-module"></span><h2>muse_tools.particles module<a class="headerlink" href="#module-muse_tools.particles" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.particles.get_particle_mass">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.particles.</span></span><span class="sig-name descname"><span class="pre">get_particle_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/muse_tools/particles.html#get_particle_mass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.particles.get_particle_mass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.particles.get_particle_pdg">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.particles.</span></span><span class="sig-name descname"><span class="pre">get_particle_pdg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/muse_tools/particles.html#get_particle_pdg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.particles.get_particle_pdg" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.particles.make_reference_particle">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.particles.</span></span><span class="sig-name descname"><span class="pre">make_reference_particle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">xpart.Particles</span></span></span><a class="reference internal" href="_modules/muse_tools/particles.html#make_reference_particle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.particles.make_reference_particle" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-muse_tools.trajectories">
+<span id="muse-tools-trajectories-module"></span><h2>muse_tools.trajectories module<a class="headerlink" href="#module-muse_tools.trajectories" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.trajectories.generate_particles_from_cfg">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.trajectories.</span></span><span class="sig-name descname"><span class="pre">generate_particles_from_cfg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/trajectories.html#generate_particles_from_cfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.trajectories.generate_particles_from_cfg" title="Link to this definition"></a></dt>
+<dd><p>Generate particles using BEAM-card half-widths stored in cfg.
+Species comes from cfg[‘species’], set in main.py.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.trajectories.get_element_positions">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.trajectories.</span></span><span class="sig-name descname"><span class="pre">get_element_positions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/trajectories.html#get_element_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.trajectories.get_element_positions" title="Link to this definition"></a></dt>
+<dd><p>Return list of (name, type, s_start, length) for real elements.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.trajectories.plot_xy_trajectories">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.trajectories.</span></span><span class="sig-name descname"><span class="pre">plot_xy_trajectories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_traj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_traj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_particles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/trajectories.html#plot_xy_trajectories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.trajectories.plot_xy_trajectories" title="Link to this definition"></a></dt>
+<dd><p>PSI-style x(s) and y(s) trajectory plot with shading and limits.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.trajectories.sigma0_from_beam_xy">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.trajectories.</span></span><span class="sig-name descname"><span class="pre">sigma0_from_beam_xy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/trajectories.html#sigma0_from_beam_xy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.trajectories.sigma0_from_beam_xy" title="Link to this definition"></a></dt>
+<dd><p>Initial beam definition from BEAM card.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>2x2 covariance matrices
+phase_space: dict of half-widths for particle generation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sigma_x0, Sigma_y0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.trajectories.track_xy_trajectories">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.trajectories.</span></span><span class="sig-name descname"><span class="pre">track_xy_trajectories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/trajectories.html#track_xy_trajectories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.trajectories.track_xy_trajectories" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="muse_tools.trajectories.track_xy_trajectories1">
+<span class="sig-prename descclassname"><span class="pre">muse_tools.trajectories.</span></span><span class="sig-name descname"><span class="pre">track_xy_trajectories1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/muse_tools/trajectories.html#track_xy_trajectories1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#muse_tools.trajectories.track_xy_trajectories1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-muse_tools">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-muse_tools" title="Link to this heading"></a></h2>
+<p>muse_tools: Utilities for building and analyzing the MUSE beamline.</p>
+<p>This package provides:
+- Beamline construction (beamline.py)
+- Optics and sigma propagation (optics.py)
+- Diagnostic plots (diagnostics.py)
+- Histogram utilities (histograms.py)</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="muse_tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

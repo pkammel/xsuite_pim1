@@ -1,0 +1,69 @@
+muse\_tools package
+===================
+
+Submodules
+----------
+
+muse\_tools.beamline module
+---------------------------
+
+.. automodule:: muse_tools.beamline
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+muse\_tools.diagnostics module
+------------------------------
+
+.. automodule:: muse_tools.diagnostics
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+muse\_tools.histograms module
+-----------------------------
+
+.. automodule:: muse_tools.histograms
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+muse\_tools.matching module
+---------------------------
+
+.. automodule:: muse_tools.matching
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+muse\_tools.optics module
+-------------------------
+
+.. automodule:: muse_tools.optics
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+muse\_tools.particles module
+----------------------------
+
+.. automodule:: muse_tools.particles
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+muse\_tools.trajectories module
+-------------------------------
+
+.. automodule:: muse_tools.trajectories
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: muse_tools
+   :members:
+   :show-inheritance:
+   :undoc-members:

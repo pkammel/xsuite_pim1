@@ -1,0 +1,7 @@
+muse_tools
+==========
+
+.. toctree::
+   :maxdepth: 4
+
+   muse_tools
