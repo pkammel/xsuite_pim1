@@ -1,0 +1,372 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>muse_tools.beamline &mdash; Project name not set  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Project name not set
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">muse_tools</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Project name not set</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">muse_tools.beamline</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for muse_tools.beamline</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Beamline construction utilities for the MUSE transport line.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xtrack</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xpart</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xp</span>
+
+<span class="c1"># =========================================================</span>
+<span class="c1"># Beam constants</span>
+<span class="c1"># =========================================================</span>
+<span class="n">MASS_PION</span> <span class="o">=</span> <span class="mf">139.57039e6</span>   <span class="c1"># eV/c^2</span>
+<span class="n">P0C</span> <span class="o">=</span> <span class="mf">0.155e9</span>             <span class="c1"># 155 MeV/c</span>
+<span class="n">BRHO</span> <span class="o">=</span> <span class="p">(</span><span class="n">P0C</span> <span class="o">*</span> <span class="mf">1e-9</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.299792458</span>
+<span class="n">P0_GeV</span> <span class="o">=</span> <span class="n">P0C</span> <span class="o">*</span> <span class="mf">1e-9</span>
+
+
+<span class="c1"># =========================================================</span>
+<span class="c1"># Element constructors</span>
+<span class="c1"># =========================================================</span>
+<div class="viewcode-block" id="drift">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.beamline.drift">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">drift</span><span class="p">(</span><span class="n">L_m</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">xt</span><span class="o">.</span><span class="n">Drift</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="n">L_m</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="psi_quad_from_transport">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.beamline.psi_quad_from_transport">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">psi_quad_from_transport</span><span class="p">(</span><span class="n">L_m</span><span class="p">,</span> <span class="n">B_kG</span><span class="p">,</span> <span class="n">a_cm</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fringe_type</span><span class="o">=</span><span class="s2">&quot;QXA&quot;</span><span class="p">):</span>
+    <span class="n">a_m</span> <span class="o">=</span> <span class="n">a_cm</span> <span class="o">*</span> <span class="mf">0.01</span>
+    <span class="n">B_T</span> <span class="o">=</span> <span class="n">B_kG</span> <span class="o">*</span> <span class="mf">0.1</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">B_T</span> <span class="o">/</span> <span class="n">a_m</span>
+    <span class="n">k1</span> <span class="o">=</span> <span class="n">G</span> <span class="o">/</span> <span class="n">BRHO</span>
+
+    <span class="n">PSI_FRINGE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.209</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0768</span><span class="p">,</span> <span class="mf">0.0552</span><span class="p">),</span>
+        <span class="s2">&quot;QSK&quot;</span><span class="p">:</span>     <span class="p">(</span><span class="mf">0.125</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0163</span><span class="p">,</span> <span class="mf">0.0389</span><span class="p">),</span>
+        <span class="s2">&quot;QXA&quot;</span><span class="p">:</span>     <span class="p">(</span><span class="mf">0.190</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0125</span><span class="p">,</span> <span class="mf">0.0777</span><span class="p">),</span>
+        <span class="s2">&quot;QTC&quot;</span><span class="p">:</span>     <span class="p">(</span><span class="mf">0.1667</span><span class="p">,</span> <span class="mf">0.0055</span><span class="p">,</span> <span class="mf">0.0894</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">I1</span><span class="p">,</span> <span class="n">I2</span><span class="p">,</span> <span class="n">I3</span> <span class="o">=</span> <span class="n">PSI_FRINGE</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fringe_type</span><span class="p">,</span> <span class="n">PSI_FRINGE</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">])</span>
+
+    <span class="n">L_eff</span> <span class="o">=</span> <span class="n">L_m</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">I1</span> <span class="o">*</span> <span class="n">a_m</span>
+    <span class="n">quad_core</span> <span class="o">=</span> <span class="n">xt</span><span class="o">.</span><span class="n">Quadrupole</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="n">L_eff</span><span class="p">,</span> <span class="n">k1</span><span class="o">=</span><span class="n">k1</span><span class="p">)</span>
+
+    <span class="n">dk1</span> <span class="o">=</span> <span class="p">(</span><span class="n">I2</span> <span class="o">/</span> <span class="n">a_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">k1</span>
+    <span class="n">fringe_linear</span> <span class="o">=</span> <span class="n">xt</span><span class="o">.</span><span class="n">Multipole</span><span class="p">(</span><span class="n">knl</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">dk1</span><span class="p">],</span> <span class="n">length</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">k2</span> <span class="o">=</span> <span class="p">(</span><span class="n">I3</span> <span class="o">/</span> <span class="n">a_m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">k1</span>
+    <span class="n">fringe_nl</span> <span class="o">=</span> <span class="n">xt</span><span class="o">.</span><span class="n">Multipole</span><span class="p">(</span><span class="n">knl</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">k2</span><span class="p">],</span> <span class="n">length</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">lim</span> <span class="o">=</span> <span class="n">xt</span><span class="o">.</span><span class="n">LimitRect</span><span class="p">(</span><span class="n">min_x</span><span class="o">=-</span><span class="n">a_m</span><span class="p">,</span> <span class="n">max_x</span><span class="o">=</span><span class="n">a_m</span><span class="p">,</span> <span class="n">min_y</span><span class="o">=-</span><span class="n">a_m</span><span class="p">,</span> <span class="n">max_y</span><span class="o">=</span><span class="n">a_m</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_fringe_in&quot;</span><span class="p">,</span> <span class="n">fringe_linear</span><span class="p">),</span>
+        <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_fringe_nl_in&quot;</span><span class="p">,</span> <span class="n">fringe_nl</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">quad_core</span><span class="p">),</span>
+        <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_fringe_nl_out&quot;</span><span class="p">,</span> <span class="n">fringe_nl</span><span class="o">.</span><span class="n">copy</span><span class="p">()),</span>
+        <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_fringe_out&quot;</span><span class="p">,</span> <span class="n">fringe_linear</span><span class="o">.</span><span class="n">copy</span><span class="p">()),</span>
+        <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;lim_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">lim</span><span class="p">),</span>
+    <span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="quad_from_transport">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.beamline.quad_from_transport">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">quad_from_transport</span><span class="p">(</span><span class="n">L_m</span><span class="p">,</span> <span class="n">B_kG</span><span class="p">,</span> <span class="n">a_cm</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="n">a_m</span> <span class="o">=</span> <span class="n">a_cm</span> <span class="o">*</span> <span class="mf">0.01</span>
+    <span class="n">B_T</span> <span class="o">=</span> <span class="n">B_kG</span> <span class="o">*</span> <span class="mf">0.1</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">B_T</span> <span class="o">/</span> <span class="n">a_m</span>
+    <span class="n">k1</span> <span class="o">=</span> <span class="n">G</span> <span class="o">/</span> <span class="n">BRHO</span>
+
+    <span class="n">q</span> <span class="o">=</span> <span class="n">xt</span><span class="o">.</span><span class="n">Quadrupole</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="n">L_m</span><span class="p">,</span> <span class="n">k1</span><span class="o">=</span><span class="n">k1</span><span class="p">)</span>
+    <span class="n">lim</span> <span class="o">=</span> <span class="n">xt</span><span class="o">.</span><span class="n">LimitRect</span><span class="p">(</span><span class="n">min_x</span><span class="o">=-</span><span class="n">a_m</span><span class="p">,</span> <span class="n">max_x</span><span class="o">=</span><span class="n">a_m</span><span class="p">,</span> <span class="n">min_y</span><span class="o">=-</span><span class="n">a_m</span><span class="p">,</span> <span class="n">max_y</span><span class="o">=</span><span class="n">a_m</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[(</span><span class="n">name</span><span class="p">,</span> <span class="n">q</span><span class="p">),</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;lim_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">lim</span><span class="p">)]</span></div>
+
+
+
+<div class="viewcode-block" id="dipole_from_transport">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.beamline.dipole_from_transport">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dipole_from_transport</span><span class="p">(</span><span class="n">L_m</span><span class="p">,</span> <span class="n">B0_kG</span><span class="p">,</span> <span class="n">edge_entry_deg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">edge_exit_deg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">B0_T</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">B0_kG</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">P0_GeV</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.299792458</span> <span class="o">*</span> <span class="n">B0_T</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">rho</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="n">L_m</span> <span class="o">*</span> <span class="n">h</span>
+
+    <span class="n">bend</span> <span class="o">=</span> <span class="n">xt</span><span class="o">.</span><span class="n">Bend</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="n">L_m</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span> <span class="n">k0</span><span class="o">=</span><span class="n">h</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">bend</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="n">edge_in</span> <span class="o">=</span> <span class="n">xt</span><span class="o">.</span><span class="n">DipoleEdge</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">e1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">edge_entry_deg</span><span class="p">))</span> <span class="k">if</span> <span class="n">edge_entry_deg</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">edge_out</span> <span class="o">=</span> <span class="n">xt</span><span class="o">.</span><span class="n">DipoleEdge</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">e1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">edge_exit_deg</span><span class="p">))</span> <span class="k">if</span> <span class="n">edge_exit_deg</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">edge_in</span><span class="p">,</span> <span class="n">bend</span><span class="p">,</span> <span class="n">edge_out</span></div>
+
+
+
+<span class="c1"># =========================================================</span>
+<span class="c1"># FULL MUSE BEAMLINE</span>
+<span class="c1"># =========================================================</span>
+
+<div class="viewcode-block" id="build_muse_line">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.beamline.build_muse_line">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_muse_line</span><span class="p">(</span>
+        <span class="n">psi_fringe</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">species</span><span class="o">=</span><span class="s2">&quot;pi+&quot;</span><span class="p">,</span>
+        <span class="n">p0c</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">lim_fs11</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">1.098e-2</span><span class="p">,</span><span class="mf">1.098e-2</span><span class="p">],[</span><span class="o">-</span><span class="mf">5.4e-2</span><span class="p">,</span><span class="mf">5.4e-2</span><span class="p">]],</span>
+        <span class="n">lim_ifp</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">0.105</span><span class="p">,</span> <span class="mf">0.105</span><span class="p">],[</span><span class="o">-</span><span class="mf">0.105</span><span class="p">,</span> <span class="mf">0.105</span><span class="p">]],</span>
+        <span class="n">qfactors</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],</span>
+    <span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">p0c</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;build_muse_line requires p0c from main.py&quot;</span><span class="p">)</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">muse_tools.particles</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_reference_particle</span>
+
+    <span class="n">elements_lin</span><span class="p">,</span> <span class="n">names_lin</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">elements_full</span><span class="p">,</span> <span class="n">names_full</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">drift_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">limit_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fs11_slit</span><span class="p">(</span><span class="n">lim_fs11</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">xt</span><span class="o">.</span><span class="n">LimitRect</span><span class="p">(</span>
+            <span class="n">min_x</span><span class="o">=</span><span class="n">lim_fs11</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">max_x</span><span class="o">=</span><span class="n">lim_fs11</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">min_y</span><span class="o">=</span><span class="n">lim_fs11</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">max_y</span><span class="o">=</span><span class="n">lim_fs11</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ifp_slit</span><span class="p">(</span><span class="n">lim_ifp</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">xt</span><span class="o">.</span><span class="n">LimitRect</span><span class="p">(</span>
+            <span class="n">min_x</span><span class="o">=</span><span class="n">lim_ifp</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">max_x</span><span class="o">=</span><span class="n">lim_ifp</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">min_y</span><span class="o">=</span><span class="n">lim_ifp</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">max_y</span><span class="o">=</span><span class="n">lim_ifp</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">)</span>
+    
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_drift</span><span class="p">(</span><span class="n">L_m</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">nonlocal</span> <span class="n">drift_count</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">drift_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;drift_</span><span class="si">{</span><span class="n">drift_count</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">d</span> <span class="o">=</span> <span class="n">drift</span><span class="p">(</span><span class="n">L_m</span><span class="p">)</span>
+        <span class="n">elements_lin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">names_lin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">elements_full</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">names_full</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_quad</span><span class="p">(</span><span class="n">L_m</span><span class="p">,</span> <span class="n">B_kG</span><span class="p">,</span> <span class="n">a_cm</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fringe_type</span><span class="o">=</span><span class="s2">&quot;QXA&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">psi_fringe</span><span class="p">:</span>
+            <span class="n">elements</span> <span class="o">=</span> <span class="n">psi_quad_from_transport</span><span class="p">(</span><span class="n">L_m</span><span class="p">,</span> <span class="n">B_kG</span><span class="p">,</span> <span class="n">a_cm</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fringe_type</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">elements</span> <span class="o">=</span> <span class="n">quad_from_transport</span><span class="p">(</span><span class="n">L_m</span><span class="p">,</span> <span class="n">B_kG</span><span class="p">,</span> <span class="n">a_cm</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ename</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+            <span class="n">elements_full</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+            <span class="n">names_full</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ename</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="p">(</span><span class="n">xt</span><span class="o">.</span><span class="n">Quadrupole</span><span class="p">,</span> <span class="n">xt</span><span class="o">.</span><span class="n">Multipole</span><span class="p">)):</span>
+                <span class="n">elements_lin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+                <span class="n">names_lin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ename</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_dipole</span><span class="p">(</span><span class="n">L_m</span><span class="p">,</span> <span class="n">B0_kG</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">edge_entry_deg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">edge_exit_deg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="n">edge_in</span><span class="p">,</span> <span class="n">bend</span><span class="p">,</span> <span class="n">edge_out</span> <span class="o">=</span> <span class="n">dipole_from_transport</span><span class="p">(</span>
+            <span class="n">L_m</span><span class="p">,</span> <span class="n">B0_kG</span><span class="p">,</span> <span class="n">edge_entry_deg</span><span class="p">,</span> <span class="n">edge_exit_deg</span><span class="p">,</span> <span class="n">name</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">elem</span><span class="p">,</span> <span class="n">ename</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">edge_in</span><span class="p">,</span> <span class="n">bend</span><span class="p">,</span> <span class="n">edge_out</span><span class="p">],</span>
+            <span class="p">[</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot;_edge_in&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="o">+</span><span class="s2">&quot;_edge_out&quot;</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="n">elem</span><span class="p">:</span>
+                <span class="n">elements_lin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+                <span class="n">elements_full</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+                <span class="n">names_lin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ename</span><span class="p">)</span>
+                <span class="n">names_full</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ename</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_limit</span><span class="p">(</span><span class="n">lim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">nonlocal</span> <span class="n">limit_count</span>
+        <span class="n">limit_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">lname</span> <span class="o">=</span> <span class="n">name</span> <span class="k">if</span> <span class="n">name</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;lim_</span><span class="si">{</span><span class="n">limit_count</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">elements_full</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lim</span><span class="p">)</span>
+        <span class="n">names_full</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lname</span><span class="p">)</span>
+
+        
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># FULL SEQUENCE (unchanged)</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.835</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.123</span><span class="p">)</span>
+    <span class="n">add_quad</span><span class="p">(</span><span class="mf">0.324</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.019</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">,</span> <span class="s2">&quot;QTA11&quot;</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.078</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.053</span><span class="p">)</span>
+    <span class="n">add_quad</span><span class="p">(</span><span class="mf">0.475</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.089</span><span class="p">,</span> <span class="mf">11.5</span><span class="p">,</span> <span class="s2">&quot;QTB11&quot;</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.110</span><span class="p">)</span>
+    <span class="n">add_quad</span><span class="p">(</span><span class="mf">0.475</span><span class="p">,</span> <span class="mf">1.221</span><span class="p">,</span> <span class="mf">11.5</span><span class="p">,</span> <span class="s2">&quot;QTB12&quot;</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.13</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.001</span><span class="o">*</span><span class="mi">54</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.004</span><span class="p">);</span> <span class="n">add_limit</span><span class="p">(</span><span class="n">fs11_slit</span><span class="p">(</span><span class="n">lim_fs11</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FS11&quot;</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.001</span><span class="o">*</span><span class="mi">54</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.239</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.368</span><span class="p">)</span>
+
+    <span class="n">add_dipole</span><span class="p">(</span><span class="mf">0.77539</span><span class="p">,</span> <span class="mf">4.4432</span><span class="p">,</span> <span class="s2">&quot;ASM11a&quot;</span><span class="p">,</span> <span class="n">edge_entry_deg</span><span class="o">=</span><span class="mf">27.9</span><span class="p">,</span> <span class="n">edge_exit_deg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">add_dipole</span><span class="p">(</span><span class="mf">0.77539</span><span class="p">,</span> <span class="mf">4.4432</span><span class="p">,</span> <span class="s2">&quot;ASM11b&quot;</span><span class="p">,</span> <span class="n">edge_entry_deg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">edge_exit_deg</span><span class="o">=</span><span class="mf">27.9</span><span class="p">)</span>
+
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.408</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.410</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.539</span><span class="p">)</span>
+    <span class="n">add_quad</span><span class="p">(</span><span class="mf">0.59</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2767</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="s2">&quot;QSL11&quot;</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.112</span><span class="p">)</span>
+    <span class="n">add_quad</span><span class="p">(</span><span class="mf">0.59</span><span class="p">,</span> <span class="mf">0.9166</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="s2">&quot;QSL12&quot;</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">1.043</span><span class="p">);</span> <span class="n">add_limit</span><span class="p">(</span><span class="n">ifp_slit</span><span class="p">(</span><span class="n">lim_ifp</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;IFP&quot;</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.001</span><span class="o">*</span><span class="mi">50</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.437</span><span class="p">)</span>
+
+    <span class="n">add_quad</span><span class="p">(</span><span class="mf">0.59</span><span class="p">,</span> <span class="mf">0.9068</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="s2">&quot;QSL13&quot;</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.112</span><span class="p">)</span>
+    <span class="n">add_quad</span><span class="p">(</span><span class="mf">0.59</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2763</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="s2">&quot;QSL14&quot;</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.903</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.408</span><span class="p">)</span>
+
+    <span class="n">add_dipole</span><span class="p">(</span><span class="mf">0.77539</span><span class="p">,</span> <span class="mf">4.3508</span><span class="p">,</span> <span class="s2">&quot;ASM12a&quot;</span><span class="p">,</span> <span class="n">edge_entry_deg</span><span class="o">=</span><span class="mf">27.9</span><span class="p">,</span> <span class="n">edge_exit_deg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">add_dipole</span><span class="p">(</span><span class="mf">0.77539</span><span class="p">,</span> <span class="mf">4.3508</span><span class="p">,</span> <span class="s2">&quot;ASM12b&quot;</span><span class="p">,</span> <span class="n">edge_entry_deg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">edge_exit_deg</span><span class="o">=</span><span class="mf">27.9</span><span class="p">)</span>
+
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.408</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.276</span><span class="p">)</span>
+    <span class="n">add_quad</span><span class="p">(</span><span class="mf">0.59</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3865</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="s2">&quot;QSL15&quot;</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.112</span><span class="p">)</span>
+    <span class="n">add_quad</span><span class="p">(</span><span class="mf">0.59</span><span class="p">,</span> <span class="mf">0.5962</span><span class="o">*</span><span class="n">qfactors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mf">12.0</span><span class="p">,</span> <span class="s2">&quot;QSL16&quot;</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">1.038</span><span class="p">)</span>
+    <span class="n">add_quad</span><span class="p">(</span><span class="mf">0.59</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.3454</span><span class="o">*</span><span class="n">qfactors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">12.0</span><span class="p">,</span> <span class="s2">&quot;QSL17&quot;</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.163</span><span class="p">)</span>
+    <span class="n">add_quad</span><span class="p">(</span><span class="mf">0.59</span><span class="p">,</span> <span class="mf">1.2568</span><span class="o">*</span><span class="n">qfactors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">12.0</span><span class="p">,</span> <span class="s2">&quot;QSL18&quot;</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">1.200</span><span class="p">);</span> <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.336</span><span class="p">)</span>
+    <span class="n">add_drift</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="s1">&#39;target&#39;</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># Build lines</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">line_lin</span> <span class="o">=</span> <span class="n">xt</span><span class="o">.</span><span class="n">Line</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="n">elements_lin</span><span class="p">,</span> <span class="n">element_names</span><span class="o">=</span><span class="n">names_lin</span><span class="p">)</span>
+    <span class="n">line_full</span> <span class="o">=</span> <span class="n">xt</span><span class="o">.</span><span class="n">Line</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="n">elements_full</span><span class="p">,</span> <span class="n">element_names</span><span class="o">=</span><span class="n">names_full</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># Set reference particle (centralized species + momentum)</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">ref</span> <span class="o">=</span> <span class="n">make_reference_particle</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="n">p0c</span><span class="p">)</span>
+
+    <span class="n">line_lin</span><span class="o">.</span><span class="n">particle_ref</span> <span class="o">=</span> <span class="n">ref</span>
+    <span class="n">line_full</span><span class="o">.</span><span class="n">particle_ref</span> <span class="o">=</span> <span class="n">ref</span>
+
+    <span class="n">line_full</span><span class="o">.</span><span class="n">build_tracker</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">line_lin</span><span class="p">,</span> <span class="n">line_full</span></div>
+
+
+<span class="c1"># =========================================================</span>
+<span class="c1"># Element utilities</span>
+<span class="c1"># =========================================================</span>
+<div class="viewcode-block" id="get_element_positions">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.beamline.get_element_positions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_element_positions</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+    <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">s_positions</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_s_elements</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">elem</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">element_names</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">s_positions</span><span class="p">):</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="s2">&quot;length&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">etype</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">positions</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">etype</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">L</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">positions</span></div>
+
+
+
+<div class="viewcode-block" id="element_color">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.beamline.element_color">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">element_color</span><span class="p">(</span><span class="n">etype</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s2">&quot;Quadrupole&quot;</span> <span class="ow">in</span> <span class="n">etype</span><span class="p">:</span> <span class="k">return</span> <span class="s2">&quot;royalblue&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;Multipole&quot;</span> <span class="ow">in</span> <span class="n">etype</span><span class="p">:</span> <span class="k">return</span> <span class="s2">&quot;red&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;LimitRect&quot;</span> <span class="ow">in</span> <span class="n">etype</span><span class="p">:</span> <span class="k">return</span> <span class="s2">&quot;green&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;gray&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

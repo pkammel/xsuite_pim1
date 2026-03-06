@@ -1,0 +1,423 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>muse_tools.optics &mdash; Project name not set  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Project name not set
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">muse_tools</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Project name not set</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">muse_tools.optics</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for muse_tools.optics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Optics utilities: Twiss, sigma propagation, R-matrices.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xtrack</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xpart</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xp</span>
+
+<div class="viewcode-block" id="sigma0_from_beam_xy">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.optics.sigma0_from_beam_xy">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sigma0_from_beam_xy</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return initial sigma matrices and phase-space half-widths</span>
+<span class="sd">    based on the BEAM card definition.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sig_x</span>  <span class="o">=</span> <span class="mf">0.15e-2</span>      <span class="c1"># m</span>
+    <span class="n">sig_xp</span> <span class="o">=</span> <span class="mf">30e-3</span>        <span class="c1"># rad</span>
+    <span class="n">sig_y</span>  <span class="o">=</span> <span class="mf">0.15e-2</span>      <span class="c1"># m</span>
+    <span class="n">sig_yp</span> <span class="o">=</span> <span class="mf">120e-3</span>       <span class="c1"># rad</span>
+
+    <span class="n">Sigma_x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">sig_x</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>   <span class="mf">0.0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span>        <span class="n">sig_xp</span><span class="o">**</span><span class="mi">2</span><span class="p">]])</span>
+
+    <span class="n">Sigma_y0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">sig_y</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>   <span class="mf">0.0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span>        <span class="n">sig_yp</span><span class="o">**</span><span class="mi">2</span><span class="p">]])</span>
+
+    <span class="n">phase_space</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;x_max&quot;</span><span class="p">:</span>   <span class="n">sig_x</span><span class="p">,</span>
+        <span class="s2">&quot;px_max&quot;</span><span class="p">:</span>  <span class="n">sig_xp</span><span class="p">,</span>
+        <span class="s2">&quot;y_max&quot;</span><span class="p">:</span>   <span class="n">sig_y</span><span class="p">,</span>
+        <span class="s2">&quot;py_max&quot;</span><span class="p">:</span>  <span class="n">sig_yp</span><span class="p">,</span>
+        <span class="s2">&quot;zeta_max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;delta_max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">Sigma_x0</span><span class="p">,</span> <span class="n">Sigma_y0</span><span class="p">,</span> <span class="n">phase_space</span></div>
+
+
+
+<div class="viewcode-block" id="compute_twiss">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.optics.compute_twiss">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_twiss</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">npoints</span><span class="o">=</span><span class="mi">2000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute Twiss and smooth interpolation.&quot;&quot;&quot;</span>
+    <span class="n">init</span> <span class="o">=</span> <span class="n">xt</span><span class="o">.</span><span class="n">TwissInit</span><span class="p">(</span>
+        <span class="n">betx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">bety</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">alfx</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)),</span>
+        <span class="n">alfy</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">120.0</span><span class="p">)),</span>
+        <span class="n">x</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">px</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">py</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">tw</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">twiss</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;4d&quot;</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">)</span>
+    <span class="n">s_dense</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">tw</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tw</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">npoints</span><span class="p">)</span>
+
+    <span class="n">tw_smooth</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="n">s_dense</span><span class="p">,</span>
+        <span class="s2">&quot;betx&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">s_dense</span><span class="p">,</span> <span class="n">tw</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="n">tw</span><span class="o">.</span><span class="n">betx</span><span class="p">),</span>
+        <span class="s2">&quot;bety&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">s_dense</span><span class="p">,</span> <span class="n">tw</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="n">tw</span><span class="o">.</span><span class="n">bety</span><span class="p">),</span>
+        <span class="s2">&quot;x&quot;</span><span class="p">:</span>    <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">s_dense</span><span class="p">,</span> <span class="n">tw</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="n">tw</span><span class="o">.</span><span class="n">x</span><span class="p">),</span>
+        <span class="s2">&quot;y&quot;</span><span class="p">:</span>    <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">s_dense</span><span class="p">,</span> <span class="n">tw</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="n">tw</span><span class="o">.</span><span class="n">y</span><span class="p">),</span>
+        <span class="s2">&quot;dx&quot;</span><span class="p">:</span>   <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">s_dense</span><span class="p">,</span> <span class="n">tw</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="n">tw</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tw</span><span class="p">,</span> <span class="s2">&quot;dx&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s_dense</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">tw</span><span class="p">,</span> <span class="n">tw_smooth</span></div>
+
+
+<div class="viewcode-block" id="element_matrix_for_line">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.optics.element_matrix_for_line">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">element_matrix_for_line</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience wrapper: get 6x6 matrix for element `idx` in `line`.</span>
+<span class="sd">    Does NOT change the original element_matrix signature.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">elem</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">p_ref</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">particle_ref</span>
+    <span class="k">return</span> <span class="n">element_matrix</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="n">p_ref</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="get_cumulative_2x2_matrices">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.optics.get_cumulative_2x2_matrices">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_cumulative_2x2_matrices</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">particle_ref</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return cumulative 2×2 matrices Mx(s), My(s).&quot;&quot;&quot;</span>
+    <span class="n">Mx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">My</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">Mx_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">My_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+        <span class="n">M6</span> <span class="o">=</span> <span class="n">element_matrix</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="n">particle_ref</span><span class="p">)</span>
+        <span class="n">Mx_elem</span> <span class="o">=</span> <span class="n">M6</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">My_elem</span> <span class="o">=</span> <span class="n">M6</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+
+        <span class="n">Mx</span> <span class="o">=</span> <span class="n">Mx_elem</span> <span class="o">@</span> <span class="n">Mx</span>
+        <span class="n">My</span> <span class="o">=</span> <span class="n">My_elem</span> <span class="o">@</span> <span class="n">My</span>
+
+        <span class="n">Mx_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Mx</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="n">My_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">My</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">Mx_list</span><span class="p">,</span> <span class="n">My_list</span></div>
+
+
+
+<div class="viewcode-block" id="propagate_sigma">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.optics.propagate_sigma">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">propagate_sigma</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">tw</span><span class="p">,</span> <span class="n">emit_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emit_y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Propagate geometric sigma using cumulative 2×2 matrices.&quot;&quot;&quot;</span>
+    <span class="n">Sigma_x0</span><span class="p">,</span> <span class="n">Sigma_y0</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sigma0_from_beam_xy</span><span class="p">()</span>
+    <span class="n">Mx_list</span><span class="p">,</span> <span class="n">My_list</span> <span class="o">=</span> <span class="n">get_cumulative_2x2_matrices</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">particle_ref</span><span class="p">)</span>
+
+    <span class="n">sig_x</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">sig_y</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">Mx</span><span class="p">,</span> <span class="n">My</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">Mx_list</span><span class="p">,</span> <span class="n">My_list</span><span class="p">):</span>
+        <span class="n">Sx</span> <span class="o">=</span> <span class="n">Mx</span> <span class="o">@</span> <span class="n">Sigma_x0</span> <span class="o">@</span> <span class="n">Mx</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">Sy</span> <span class="o">=</span> <span class="n">My</span> <span class="o">@</span> <span class="n">Sigma_y0</span> <span class="o">@</span> <span class="n">My</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">sig_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Sx</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+        <span class="n">sig_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Sy</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+
+    <span class="n">sig_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">sig_x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Sigma_x0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">sig_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">sig_y</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Sigma_y0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sig_x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sig_y</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="compute_R_matrix_dict">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.optics.compute_R_matrix_dict">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_R_matrix_dict</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+    <span class="n">n_elem</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+    <span class="n">R12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_elem</span><span class="p">)</span>
+    <span class="n">R34</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_elem</span><span class="p">)</span>
+
+    <span class="n">M_acc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_elem</span><span class="p">):</span>
+
+        <span class="n">M_elem</span> <span class="o">=</span> <span class="n">element_matrix_for_line</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>  <span class="c1"># &lt;-- use wrapper</span>
+        <span class="n">M_acc</span> <span class="o">=</span> <span class="n">M_elem</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">@</span> <span class="n">M_acc</span>
+
+        <span class="n">R12</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">M_acc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">R34</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">M_acc</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;R12&quot;</span><span class="p">:</span> <span class="n">R12</span><span class="p">,</span> <span class="s2">&quot;R34&quot;</span><span class="p">:</span> <span class="n">R34</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="element_matrix">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.optics.element_matrix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">element_matrix</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">particle_ref</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    6x6 finite-difference matrix for a single element.</span>
+<span class="sd">    Used by get_cumulative_2x2_matrices() and propagate_sigma().</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+    <span class="n">coord_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;px&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;py&quot;</span><span class="p">,</span> <span class="s2">&quot;zeta&quot;</span><span class="p">,</span> <span class="s2">&quot;delta&quot;</span><span class="p">]</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+    <span class="c1"># Convert a particle to a flat 6-vector</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vec</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">px</span><span class="p">),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">py</span><span class="p">),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">zeta</span><span class="p">),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">delta</span><span class="p">),</span>
+        <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">cname</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coord_names</span><span class="p">):</span>
+
+        <span class="c1"># fresh reference for each column</span>
+        <span class="n">p0</span> <span class="o">=</span> <span class="n">particle_ref</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">p_plus</span>  <span class="o">=</span> <span class="n">p0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">p_minus</span> <span class="o">=</span> <span class="n">p0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">p_plus</span><span class="p">,</span>  <span class="n">cname</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">p_plus</span><span class="p">,</span>  <span class="n">cname</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">p_minus</span><span class="p">,</span> <span class="n">cname</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">p_minus</span><span class="p">,</span> <span class="n">cname</span><span class="p">)</span> <span class="o">-</span> <span class="n">eps</span><span class="p">)</span>
+
+        <span class="c1"># track through this element only</span>
+        <span class="n">element</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">p_plus</span><span class="p">)</span>
+        <span class="n">element</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">p_minus</span><span class="p">)</span>
+
+        <span class="c1"># finite difference derivative</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">vec</span><span class="p">(</span><span class="n">p_plus</span><span class="p">)</span> <span class="o">-</span> <span class="n">vec</span><span class="p">(</span><span class="n">p_minus</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eps</span><span class="p">)</span>
+
+        <span class="c1"># ensure shape is (6,)</span>
+        <span class="n">R</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">R</span></div>
+
+
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xpart</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xp</span>
+
+<div class="viewcode-block" id="make_beam">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.optics.make_beam">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_beam</span><span class="p">(</span>
+    <span class="n">line</span><span class="p">,</span>
+    <span class="n">Sigma_x0</span><span class="p">,</span> <span class="n">Sigma_y0</span><span class="p">,</span>
+    <span class="n">n_part</span><span class="o">=</span><span class="mi">1_000_000</span><span class="p">,</span>
+    <span class="n">transverse</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>     <span class="c1"># &quot;gaussian&quot; or &quot;flat&quot;</span>
+    <span class="n">longitudinal</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>   <span class="c1"># &quot;gaussian&quot; or &quot;flat&quot;</span>
+    <span class="n">sigma_delta</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>          <span class="c1"># width for gaussian delta</span>
+    <span class="n">delta_max</span><span class="o">=</span><span class="mf">3e-3</span><span class="p">,</span>            <span class="c1"># half-width for flat delta</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">12345</span><span class="p">,</span>
+    <span class="n">prt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">species</span><span class="o">=</span><span class="s1">&#39;pi+&#39;</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">xpart</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xp</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">muse_tools.particles</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_particle_mass</span><span class="p">,</span> <span class="n">get_particle_pdg</span>
+
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 1) Transverse distributions</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="k">if</span> <span class="n">transverse</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+        <span class="n">x</span>  <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Sigma_x0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_part</span><span class="p">)</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Sigma_x0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_part</span><span class="p">)</span>
+        <span class="n">y</span>  <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Sigma_y0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_part</span><span class="p">)</span>
+        <span class="n">py</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Sigma_y0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_part</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">transverse</span> <span class="o">==</span> <span class="s2">&quot;flat&quot;</span><span class="p">:</span>
+        <span class="n">x</span>  <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">Sigma_x0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>  <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">Sigma_x0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>  <span class="n">size</span><span class="o">=</span><span class="n">n_part</span><span class="p">)</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">Sigma_x0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>  <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">Sigma_x0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>  <span class="n">size</span><span class="o">=</span><span class="n">n_part</span><span class="p">)</span>
+        <span class="n">y</span>  <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">Sigma_y0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>  <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">Sigma_y0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>  <span class="n">size</span><span class="o">=</span><span class="n">n_part</span><span class="p">)</span>
+        <span class="n">py</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">Sigma_y0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>  <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">Sigma_y0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>  <span class="n">size</span><span class="o">=</span><span class="n">n_part</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;transverse must be &#39;gaussian&#39; or &#39;flat&#39;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 2) Longitudinal distribution</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="k">if</span> <span class="n">longitudinal</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma_delta</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_part</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">longitudinal</span> <span class="o">==</span> <span class="s2">&quot;flat&quot;</span><span class="p">:</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">delta_max</span><span class="p">,</span> <span class="n">delta_max</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_part</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;longitudinal must be &#39;gaussian&#39; or &#39;flat&#39;&quot;</span><span class="p">)</span>
+
+    <span class="n">zeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_part</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 3) Particle species (mass + PDG ID)</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">mass</span> <span class="o">=</span> <span class="n">get_particle_mass</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
+    <span class="n">pdg</span>  <span class="o">=</span> <span class="n">get_particle_pdg</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 4) Construct particles</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="n">particles</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">Particles</span><span class="p">(</span>
+        <span class="n">mass</span><span class="o">=</span><span class="n">mass</span><span class="p">,</span>
+        <span class="n">p0c</span><span class="o">=</span><span class="n">line</span><span class="o">.</span><span class="n">particle_ref</span><span class="o">.</span><span class="n">p0c</span><span class="p">,</span>   <span class="c1"># momentum defined in main</span>
+        <span class="n">pdg_id</span><span class="o">=</span><span class="n">pdg</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">px</span><span class="o">=</span><span class="n">px</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">py</span><span class="o">=</span><span class="n">py</span><span class="p">,</span>
+        <span class="n">zeta</span><span class="o">=</span><span class="n">zeta</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="n">delta</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># 5) Optional printing</span>
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="k">if</span> <span class="n">prt</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">transverse</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+            <span class="n">print_beam_stats</span><span class="p">(</span><span class="n">particles</span><span class="p">,</span> <span class="s2">&quot;Gaussian beam&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">print_flat_beam_stats</span><span class="p">(</span><span class="n">particles</span><span class="p">,</span> <span class="s2">&quot;Flat beam&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">particles</span></div>
+
+
+
+<div class="viewcode-block" id="print_beam_stats">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.optics.print_beam_stats">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_beam_stats</span><span class="p">(</span><span class="n">particles</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="n">x</span>  <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">px</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">px</span>
+    <span class="n">y</span>  <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">py</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">d</span>  <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">delta</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> ---&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sigma_x  = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sigma_px = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">px</span><span class="p">)</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sigma_y  = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sigma_py = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">py</span><span class="p">)</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sigma_delta = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;N = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="print_flat_beam_stats">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.optics.print_flat_beam_stats">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_flat_beam_stats</span><span class="p">(</span><span class="n">particles</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="n">x</span>  <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">px</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">px</span>
+    <span class="n">y</span>  <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">py</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">d</span>  <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">delta</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> ---&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;half_x  = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">,   sigma_x  = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;half_px = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">px</span><span class="p">))</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">,  sigma_px = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">px</span><span class="p">)</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;half_y  = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">))</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">,   sigma_y  = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;half_py = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">py</span><span class="p">))</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">,  sigma_py = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">py</span><span class="p">)</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;half_delta = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">d</span><span class="p">))</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">, sigma_delta = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;N = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

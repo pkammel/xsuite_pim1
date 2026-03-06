@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>muse_tools.trajectories &mdash; Project name not set  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Project name not set
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">muse_tools</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Project name not set</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">muse_tools.trajectories</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for muse_tools.trajectories</h1><div class="highlight"><pre>
+<span></span><span class="c1"># trajectories.py</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rectangle</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># 1) Phase-space definition from BEAM card</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="sigma0_from_beam_xy">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.trajectories.sigma0_from_beam_xy">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sigma0_from_beam_xy</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initial beam definition from BEAM card.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Sigma_x0, Sigma_y0: 2x2 covariance matrices</span>
+<span class="sd">        phase_space: dict of half-widths for particle generation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">sig_x</span>  <span class="o">=</span> <span class="mf">0.15e-2</span>      <span class="c1"># m</span>
+    <span class="n">sig_xp</span> <span class="o">=</span> <span class="mf">30e-3</span>        <span class="c1"># rad</span>
+    <span class="n">sig_y</span>  <span class="o">=</span> <span class="mf">0.15e-2</span>      <span class="c1"># m</span>
+    <span class="n">sig_yp</span> <span class="o">=</span> <span class="mf">120e-3</span>       <span class="c1"># rad</span>
+
+    <span class="n">Sigma_x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">sig_x</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>   <span class="mf">0.0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span>        <span class="n">sig_xp</span><span class="o">**</span><span class="mi">2</span><span class="p">]])</span>
+
+    <span class="n">Sigma_y0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">sig_y</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>   <span class="mf">0.0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span>        <span class="n">sig_yp</span><span class="o">**</span><span class="mi">2</span><span class="p">]])</span>
+
+    <span class="n">phase_space</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;x_max&quot;</span><span class="p">:</span>   <span class="n">sig_x</span><span class="p">,</span>
+        <span class="s2">&quot;px_max&quot;</span><span class="p">:</span>  <span class="n">sig_xp</span><span class="p">,</span>
+        <span class="s2">&quot;y_max&quot;</span><span class="p">:</span>   <span class="n">sig_y</span><span class="p">,</span>
+        <span class="s2">&quot;py_max&quot;</span><span class="p">:</span>  <span class="n">sig_yp</span><span class="p">,</span>
+        <span class="s2">&quot;zeta_max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;delta_max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">Sigma_x0</span><span class="p">,</span> <span class="n">Sigma_y0</span><span class="p">,</span> <span class="n">phase_space</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># 2) Particle generator (uniform, BEAM-card-based)</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">muse_tools.particles</span><span class="w"> </span><span class="kn">import</span> <span class="n">PARTICLE_DATA</span>
+
+<div class="viewcode-block" id="generate_particles_from_cfg">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.trajectories.generate_particles_from_cfg">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_particles_from_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">n_part</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate particles using BEAM-card half-widths stored in cfg.</span>
+<span class="sd">    Species comes from cfg[&#39;species&#39;], set in main.py.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;initial_phase_space&quot;</span><span class="p">]</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;line&quot;</span><span class="p">]</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;species&quot;</span><span class="p">]</span>  <span class="c1"># &lt;-- main.py controls this</span>
+
+    <span class="n">pdg_id</span> <span class="o">=</span> <span class="n">PARTICLE_DATA</span><span class="p">[</span><span class="n">species</span><span class="p">][</span><span class="s2">&quot;pdg_id&quot;</span><span class="p">]</span>
+
+    <span class="n">x</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">scale</span><span class="o">*</span><span class="n">ps</span><span class="p">[</span><span class="s2">&quot;x_max&quot;</span><span class="p">],</span>  <span class="n">scale</span><span class="o">*</span><span class="n">ps</span><span class="p">[</span><span class="s2">&quot;x_max&quot;</span><span class="p">],</span>  <span class="n">n_part</span><span class="p">)</span>
+    <span class="n">px</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">scale</span><span class="o">*</span><span class="n">ps</span><span class="p">[</span><span class="s2">&quot;px_max&quot;</span><span class="p">],</span> <span class="n">scale</span><span class="o">*</span><span class="n">ps</span><span class="p">[</span><span class="s2">&quot;px_max&quot;</span><span class="p">],</span> <span class="n">n_part</span><span class="p">)</span>
+    <span class="n">y</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">scale</span><span class="o">*</span><span class="n">ps</span><span class="p">[</span><span class="s2">&quot;y_max&quot;</span><span class="p">],</span>  <span class="n">scale</span><span class="o">*</span><span class="n">ps</span><span class="p">[</span><span class="s2">&quot;y_max&quot;</span><span class="p">],</span>  <span class="n">n_part</span><span class="p">)</span>
+    <span class="n">py</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">scale</span><span class="o">*</span><span class="n">ps</span><span class="p">[</span><span class="s2">&quot;py_max&quot;</span><span class="p">],</span> <span class="n">scale</span><span class="o">*</span><span class="n">ps</span><span class="p">[</span><span class="s2">&quot;py_max&quot;</span><span class="p">],</span> <span class="n">n_part</span><span class="p">)</span>
+
+    <span class="n">part</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">build_particles</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">px</span><span class="o">=</span><span class="n">px</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">py</span><span class="o">=</span><span class="n">py</span><span class="p">,</span>
+        <span class="n">pdg_id</span><span class="o">=</span><span class="n">pdg_id</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">part</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># 3) Manual element-by-element tracking (transfer-line safe)</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="track_xy_trajectories">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.trajectories.track_xy_trajectories">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">track_xy_trajectories</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">particles</span><span class="p">):</span>
+    <span class="n">n_elem</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+    <span class="n">n_part</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="n">x_traj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_elem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_part</span><span class="p">))</span>
+    <span class="n">y_traj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_elem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_part</span><span class="p">))</span>
+
+    <span class="n">x_traj</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">y_traj</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">elements</span><span class="p">):</span>
+        <span class="n">elem</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">particles</span><span class="p">)</span>
+
+        <span class="c1"># Mask lost particles immediately</span>
+        <span class="n">lost</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">lost</span><span class="p">):</span>
+            <span class="n">particles</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">lost</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">particles</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">lost</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="n">x_traj</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">y_traj</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">s_positions</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_s_elements</span><span class="p">()</span>
+    <span class="n">s_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_positions</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">get_length</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">s_positions</span><span class="p">,</span> <span class="n">x_traj</span><span class="p">,</span> <span class="n">y_traj</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># 4) Element positions for shading</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="get_element_positions">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.trajectories.get_element_positions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_element_positions</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return list of (name, type, s_start, length) for real elements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">element_names</span><span class="p">:</span>
+        <span class="n">elem</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">element_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="s2">&quot;length&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">0.0</span>
+
+        <span class="n">etype</span> <span class="o">=</span> <span class="n">elem</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">if</span> <span class="n">etype</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Quadrupole&quot;</span><span class="p">):</span>
+            <span class="n">etype</span> <span class="o">=</span> <span class="s2">&quot;Quadrupole&quot;</span>
+        <span class="k">elif</span> <span class="n">etype</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Bend&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">etype</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SBend&quot;</span><span class="p">):</span>
+            <span class="n">etype</span> <span class="o">=</span> <span class="s2">&quot;Bend&quot;</span>
+        <span class="k">elif</span> <span class="n">etype</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Multipole&quot;</span><span class="p">):</span>
+            <span class="n">etype</span> <span class="o">=</span> <span class="s2">&quot;Multipole&quot;</span>
+        <span class="k">elif</span> <span class="n">etype</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Drift&quot;</span><span class="p">):</span>
+            <span class="n">etype</span> <span class="o">=</span> <span class="s2">&quot;Drift&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">L</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+        <span class="n">positions</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">etype</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">L</span><span class="p">))</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">L</span>
+
+    <span class="k">return</span> <span class="n">positions</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># 5) PSI-style trajectory plot with limits, shading, max events</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="track_xy_trajectories1">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.trajectories.track_xy_trajectories1">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">track_xy_trajectories1</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">particles</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Inside function BEFORE loop, NaN in x:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">particles</span><span class="o">.</span><span class="n">x</span><span class="p">)))</span>
+
+    <span class="n">n_elem</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+    <span class="n">n_part</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="n">x_traj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_elem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_part</span><span class="p">))</span>
+    <span class="n">y_traj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_elem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_part</span><span class="p">))</span>
+
+    <span class="n">x_traj</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">y_traj</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">elements</span><span class="p">):</span>
+        <span class="n">elem</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">particles</span><span class="p">)</span>
+
+        <span class="c1"># Mask lost particles</span>
+        <span class="n">lost</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="mi">0</span>
+
+        <span class="c1"># Mask NaN / inf BEFORE they propagate</span>
+        <span class="n">bad</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">particles</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">|</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">particles</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">lost</span> <span class="o">|</span> <span class="n">bad</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+            <span class="n">particles</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">particles</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="n">x_traj</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">y_traj</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">particles</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">s_positions</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_s_elements</span><span class="p">()</span>
+    <span class="n">s_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_positions</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">get_length</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">s_positions</span><span class="p">,</span> <span class="n">x_traj</span><span class="p">,</span> <span class="n">y_traj</span></div>
+
+
+
+<div class="viewcode-block" id="plot_xy_trajectories">
+<a class="viewcode-back" href="../../muse_tools.html#muse_tools.trajectories.plot_xy_trajectories">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_xy_trajectories</span><span class="p">(</span>
+        <span class="n">line</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">x_traj</span><span class="p">,</span> <span class="n">y_traj</span><span class="p">,</span>
+        <span class="n">start_event</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">max_particles</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">slim</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    PSI-style x(s) and y(s) trajectory plot with shading and limits.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># particle selection</span>
+    <span class="n">n_part</span> <span class="o">=</span> <span class="n">x_traj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">n_plot</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">max_particles</span><span class="p">,</span> <span class="n">n_part</span><span class="p">)</span>
+
+    <span class="c1"># s-range cropping</span>
+    <span class="k">if</span> <span class="n">slim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">smin</span><span class="p">,</span> <span class="n">smax</span> <span class="o">=</span> <span class="n">slim</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span> <span class="o">&gt;=</span> <span class="n">smin</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">s</span> <span class="o">&lt;=</span> <span class="n">smax</span><span class="p">)</span>
+        <span class="n">s_plot</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="n">x_plot</span> <span class="o">=</span> <span class="n">x_traj</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="p">:</span><span class="n">n_plot</span><span class="p">]</span>
+        <span class="n">y_plot</span> <span class="o">=</span> <span class="n">y_traj</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="p">:</span><span class="n">n_plot</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">s_plot</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="n">x_plot</span> <span class="o">=</span> <span class="n">x_traj</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_plot</span><span class="p">]</span>
+        <span class="n">y_plot</span> <span class="o">=</span> <span class="n">y_traj</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_plot</span><span class="p">]</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_x</span><span class="p">,</span> <span class="n">ax_y</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+        <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># X trajectories</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_plot</span><span class="p">):</span>
+        <span class="n">ax_x</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s_plot</span><span class="p">,</span> <span class="n">x_plot</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkorange&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">ax_x</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;x [m]&quot;</span><span class="p">)</span>
+    <span class="n">ax_x</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Y trajectories</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_plot</span><span class="p">):</span>
+        <span class="n">ax_y</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s_plot</span><span class="p">,</span> <span class="n">y_plot</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">ax_y</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;s [m]&quot;</span><span class="p">)</span>
+    <span class="n">ax_y</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y [m]&quot;</span><span class="p">)</span>
+    <span class="n">ax_y</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># axis limits</span>
+    <span class="k">if</span> <span class="n">xlim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax_x</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ylim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax_y</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+
+    <span class="c1"># shading</span>
+    <span class="n">positions</span> <span class="o">=</span> <span class="n">get_element_positions</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">color_fn</span><span class="p">(</span><span class="n">etype</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">etype</span> <span class="o">==</span> <span class="s2">&quot;Quadrupole&quot;</span><span class="p">:</span> <span class="k">return</span> <span class="s2">&quot;red&quot;</span>
+        <span class="k">if</span> <span class="n">etype</span> <span class="o">==</span> <span class="s2">&quot;Bend&quot;</span><span class="p">:</span> <span class="k">return</span> <span class="s2">&quot;blue&quot;</span>
+        <span class="k">if</span> <span class="n">etype</span> <span class="o">==</span> <span class="s2">&quot;Multipole&quot;</span><span class="p">:</span> <span class="k">return</span> <span class="s2">&quot;purple&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;gray&quot;</span>
+
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ax_x</span><span class="p">,</span> <span class="n">ax_y</span><span class="p">):</span>
+        <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+        <span class="n">full_height</span> <span class="o">=</span> <span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">etype</span><span class="p">,</span> <span class="n">spos</span><span class="p">,</span> <span class="n">L</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">L</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">etype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;Quadrupole&quot;</span><span class="p">,</span> <span class="s2">&quot;Bend&quot;</span><span class="p">,</span> <span class="s2">&quot;Multipole&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">slim</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span><span class="n">spos</span> <span class="o">+</span> <span class="n">L</span> <span class="o">&gt;=</span> <span class="n">slim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">spos</span> <span class="o">&lt;=</span> <span class="n">slim</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">spos</span><span class="p">,</span> <span class="n">ymin</span><span class="p">),</span> <span class="n">L</span><span class="p">,</span> <span class="n">full_height</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="n">color_fn</span><span class="p">(</span><span class="n">etype</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span>
+                    <span class="p">))</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                        <span class="n">spos</span> <span class="o">+</span> <span class="n">L</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">+</span> <span class="mf">0.95</span><span class="o">*</span><span class="n">full_height</span><span class="p">,</span>
+                        <span class="n">name</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                        <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span>
+                    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
